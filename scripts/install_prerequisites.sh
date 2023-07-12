@@ -8,7 +8,7 @@ MANAGER=""
 LIST=0
 VERBOSE=0
 DRYRUN=0
-UPDATE=1
+UPDATE=0
 REQUIRED_RECOMMENDED_ALL=1
 SUDO=""
 
@@ -177,7 +177,11 @@ fi
 
 if ((UPDATE > 0)); then
     if ((VERBOSE > 0)); then echo "Requesting \"$MANAGER\" package update."; fi
-    $SUDO $PKGS_UPDATE
+    if (( $EUID != 0 )); then
+      $SUDO $PKGS_UPDATE
+    else
+      $PKGS_UPDATE
+    fi
 fi
 
 if ((VERBOSE > 0)); then echo "Requesting install of: ${PACKAGES[*]}"; fi
