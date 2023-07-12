@@ -183,4 +183,8 @@ fi
 if ((VERBOSE > 0)); then echo "Requesting install of: ${PACKAGES[*]}"; fi
 
 # Install
-$SUDO $MANAGER ${PKGS_OPTIONS[*]} ${PACKAGES[*]}
+if (( $EUID != 0 )); then
+    $MANAGER ${PKGS_OPTIONS[*]} ${PACKAGES[*]}
+else
+    $SUDO $MANAGER ${PKGS_OPTIONS[*]} ${PACKAGES[*]}
+fi
